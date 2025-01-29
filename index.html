@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Photographer Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Welcome to the Photographer Booking Service</h1>
+</header>
+
+<!-- Main Content -->
+<div class="container booking-page">
+    <h2>Book Your Photographer</h2>
+
+    <div class="booking-cards">
+        <!-- Loop through photographers -->
+        {% for photographer in photographers %}
+        <div class="booking-card">
+            <img src="{{ url_for('static', filename='images/' + photographer.image) }}" alt="{{ photographer.name }}">
+            <h3>{{ photographer.name }}</h3>
+            <p>{{ photographer.bio }}</p>
+            <p class="rate">${{ photographer.rate_per_hour }}/hour</p>
+
+            <form action="/book" method="POST">
+                <input type="hidden" name="photographer-selection" value="{{ photographer.id }}">
+                <input type="datetime-local" name="booking-time" required>
+                <label for="duration">Duration (in hours):</label>
+                <input type="number" name="duration" min="1" required>
+                <button class="book-btn" type="submit">Book Now</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3>Your Previous Bookings</h3>
+    <ul>
+        {% for booking in bookings %}
+        <li>
+            Photographer: {{ booking.photographer }}<br>
+            Time: {{ booking.time }}<br>
+            Duration: {{ booking.duration }} hours<br>
+            Total Cost: ${{ booking.total_cost }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>
